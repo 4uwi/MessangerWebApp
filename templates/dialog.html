@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2>{% block title %} {{ messages }} {% endblock %}</h2>
-    <span class="badge badge-primary">{{ post['created'] }}</span>
-    <p>{{ post['content'] }}</p>
+    {% for item in message %}
+    {% set gay = item['id_receiver'] %}
+        <h2>{% block title %} {{ gay }} {% endblock title %}</h2>
+        <span class="badge badge-primary">{{ item['text'] }}</span>
+        <p>{{ item['datetime'] }}</p>
+    {% endfor %}
 {% endblock %}

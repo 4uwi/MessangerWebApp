@@ -1,10 +1,13 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    {% for message, tag in zip(messages,tags) %}
-        <a href="#">
-            <h2> {{ tag , message }}</h2>
-        </a>
-        <hr>
+
+    {% for item in message %}
+    </a href="{{ url_for('dialog', contact_id=item['id_receiver']) }}" >
+       <span class="badge badge-primary">  {{ item['id_receiver'] }}</span>
+    <a/>
+    <h2> {{ item['text','datetime'] }} </h2>
+    <hr>
     {% endfor %}
+
 {% endblock %}

@@ -15,9 +15,16 @@ except Exception:
         print('Database created')
 
 
-connection = database.connect(user='root', database='messenger', password='365841', host='localhost')
-cur = connection.cursor()
+connection.commit()
+connection.close()
 
-cur.execute("SHOW TABLES")
-res = cur.fetchall()
-print(res)
+# connection = database.connect(user='root', password='365841', database='messenger')
+# cur = connection.cursor()
+#
+# cur.execute("SELECT * FROM message")
+# res = cur.fetchall()
+#
+# cur.execute("SELECT * FROM message")
+# res1 = cur.fetchone()
+#
+# print(res.__class__, res1.__class__)
