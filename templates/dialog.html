@@ -4,7 +4,8 @@
     {% for item in message %}
     {% set gay = item['id_receiver'] %}
         <h2>{% block title %} {{ gay }} {% endblock title %}</h2>
-        <span class="badge badge-primary">{{ item['text'] }}</span>
-        <p>{{ item['datetime'] }}</p>
+        <span class="badge badge-primary">{{ item['datetime'] }}</span>
+        <p style="border: 2px #eee solid">{{ item['text'] }}</p>
+        <hr>
     {% endfor %}
 {% endblock %}

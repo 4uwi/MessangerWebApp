@@ -1,13 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
     {% for item in message %}
-    </a href="{{ url_for('dialog', contact_id=item['id_receiver']) }}" >
-       <span class="badge badge-primary">  {{ item['id_receiver'] }}</span>
+    <a href="{{ url_for('dialog', dialog_id=item['id_receiver']) }}">
+        <p> {{ item['text'] }} {{ item['datetime'] }} </p>
     <a/>
-    <h2> {{ item['text','datetime'] }} </h2>
+    <span class="badge badge-primary">{{ item['name'] }}</span>
     <hr>
     {% endfor %}
-
 {% endblock %}

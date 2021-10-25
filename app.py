@@ -9,9 +9,13 @@ import pandas as pd
 app = Flask(__name__)
 
 
-# REMEMBER: 1 result is tuple, many results is list
-def create_message_dict(*args):
-    tags = ("id_message", "id_sender", "id_receiver", "datetime", "text")
+def create_message_dict(*args, tags=True): #tags is boolean for switching between
+                                            #list and dialog
+    if tags:
+        tags = ("id_receiver", "name", "datetime", "text")
+    else:
+        tags = ("id", "id_sender", "id_receiver", "datetime", "text")
+
     messages = []
     for items in args:
         if items is None:
@@ -20,21 +24,6 @@ def create_message_dict(*args):
             for item in items:
                 messages.append(pd.Series(item, tags))
     return messages
-
-
-
-# class Message:
-#     data = ()
-#
-#     def __init__(self, *args):
-#         tags = ("ID message:", "ID sender:", "ID receiver:", "Date&Time:", "Message:")
-#         self.data = pd.Series(args, tags)
-#         return self
-#
-#     def __iter__(self):
-#         for item in self.data:
-#             yield item
-
 
 def get_db_connection():
     con = database.connect(database='messenger', user='root', password='365841')
@@ -52,7 +41,9 @@ def get_message_by_id(id):
 def get_messages_by_contact(contact_id):
     con = get_db_connection()
     cur = con.cursor()
-    cur.execute("SELECT * FROM message WHERE id_receiver = %s", (contact_id,))
+    cur.execute("SELECT * "
+                "FROM message "
+                "WHERE id_receiver = %s", (contact_id,))
     res = cur.fetchall()
     if res is None:
         abort(404)  # TODO: come up with return if no messages
@@ -61,17 +52,24 @@ def get_messages_by_contact(contact_id):
 
 @app.route('/')
 def index():
+
     con = get_db_connection()
     cur = con.cursor()
 
-    cur.execute("SELECT * FROM message")
+    # TODO connect loginig mechanism to change search id
+    id = 1
+
+    cur.execute("SELECT id_receiver, name, MAX(`datetime`), `text` "
+                "FROM message JOIN `user` "
+                "WHERE id_sender=%s "
+                "GROUP BY id_receiver", (id,) )
     res = cur.fetchall()
     message = create_message_dict(res)
     return render_template('index.html', message=message)
 
 
-@app.route('/<int:contact_id>')
-def dialog(contact_id):
-    res = get_messages_by_contact(contact_id)
-    message = create_message_dict(res)
+@app.route('/<int:dialog_id>')
+def dialog(dialog_id):
+    res = get_messages_by_contact(dialog_id)
+    message = create_message_dict(res, tags=False)
     return render_template('dialog.html', message=message)
